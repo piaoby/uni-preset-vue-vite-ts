@@ -67,7 +67,7 @@ import { ref, onMounted, onUnmounted } from "vue";
 import * as echarts from "echarts";
 
 const state = {
-  usernames: ["xxxxxxxxxx工程", "xxxxxxxxxx工程2", "xxxxxxxxxx工程3"],
+  usernames: ["XXXXXXX工程", "XXXXXXX工程2", "XXXXXXX工程3"],
   userEmail: "赵小军",
   progress: 50,
   functions: [
@@ -99,7 +99,7 @@ const triggerDropdown = (): void => {
 };
 const goTofunctions = (functionVal: string) => {
   uni.navigateTo({
-    url: `/pages/component/functions/${functionVal}`,
+    url: `/pages/functions/${functionVal}`,
   });
 };
 selectedUsername.value = state.usernames[0];
@@ -126,7 +126,6 @@ onMounted(() => {
         type: "pie",
         padAngle: 2,
         startAngle: 90,
-        // endAngle: 360 * (80 / 100) - 90,
         radius: ["60%", "70%"],
         avoidLabelOverlap: false,
         label: {
@@ -215,7 +214,7 @@ onMounted(() => {
   height: 70px;
   border-radius: 40%;
   margin-right: 20px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 1);
 }
 
 .text-info {
@@ -255,8 +254,9 @@ onMounted(() => {
 }
 
 .email {
-  font-size: 1em;
+  font-size: 14px;
   padding-left: 5px;
+  font-weight: 600;
 }
 
 .title {
@@ -297,6 +297,7 @@ onMounted(() => {
 .function-text {
   text-align: center;
   font-size: 0.8em;
+  font-weight: 600;
 }
 
 .progress-bar {

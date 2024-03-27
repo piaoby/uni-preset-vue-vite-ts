@@ -1,41 +1,41 @@
 {
   "pages": [
     {
-      "path": "pages/component/page/page",
+      "path": "pages/page/page",
       "style": {
         "navigationBarTitleText": ""
       }
     },
     {
-      "path": "pages/component/alarm/alarm",
+      "path": "pages/alarm/alarm",
       "style": {
         "navigationBarTitleText": "",
         "enablePullDownRefresh": false
       }
     },
     {
-      "path": "pages/component/introduction/introduction",
+      "path": "pages/introduction/introduction",
       "style": {
         "navigationBarTitleText": "项目简介",
         "enablePullDownRefresh": false
       }
     },
     {
-      "path": "pages/component/own/own",
+      "path": "pages/own/own",
       "style": {
         "navigationBarTitleText": "",
         "enablePullDownRefresh": false
       }
     },
     {
-      "path": "pages/component/functions/car",
+      "path": "pages/functions/car",
       "style": {
         "navigationBarTitleText": "车辆管理",
         "enablePullDownRefresh": false
       }
     },
     {
-      "path": "pages/component/functions/user",
+      "path": "pages/functions/user",
       "style": {
         "navigationBarTitleText": "人员管理",
         "enablePullDownRefresh": false
@@ -53,25 +53,25 @@
     "backgroundColor": "#ffffff",
     "list": [
       {
-        "pagePath": "pages/component/page/page",
+        "pagePath": "pages/page/page",
         "iconPath": "static/tabBar/page.png",
         "selectedIconPath": "static/tabBar/pageactive.png",
         "text": "首页"
       },
       {
-        "pagePath": "pages/component/alarm/alarm",
+        "pagePath": "pages/alarm/alarm",
         "iconPath": "static/tabBar/alarm.png",
         "selectedIconPath": "static/tabBar/alarmactive.png",
         "text": "告警"
       },
       {
-        "pagePath": "pages/component/introduction/introduction",
+        "pagePath": "pages/introduction/introduction",
         "iconPath": "static/tabBar/introduction.png",
         "selectedIconPath": "static/tabBar/introductionactive.png",
         "text": "简介"
       },
       {
-        "pagePath": "pages/component/own/own",
+        "pagePath": "pages/own/own",
         "iconPath": "static/tabBar/own.png",
         "selectedIconPath": "static/tabBar/ownactive.png",
         "text": "我的"
