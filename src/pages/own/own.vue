@@ -8,11 +8,7 @@
           <div class="text-info">
             <div class="username-dropdown" @click="triggerDropdown">
               <select v-model="selectedUsername" ref="userSelect">
-                <option
-                  v-for="name in state.usernames"
-                  :key="name"
-                  :value="name"
-                >
+                <option v-for="name in state.usernames" :key="name" :value="name">
                   {{ name }}
                 </option>
               </select>
@@ -28,12 +24,7 @@
       <div class="card-content">
         <h4 class="title">更多功能</h4>
         <div class="functions-grid">
-          <div
-            class="function-item"
-            v-for="(item, index) in functions"
-            :key="index"
-            @click="goTofunctions(item.value)"
-          >
+          <div class="function-item" v-for="(item, index) in functions" :key="index" @click="goTofunctions(item.value)">
             <img :src="item.img" :alt="item.text" class="function-icon" />
             <span class="function-text">{{ item.text }}</span>
           </div>
@@ -112,7 +103,7 @@ onMounted(() => {
   const myChart = echarts.init(chartDom);
   const option = {
     title: {
-      text: "实际进度:50%",
+      text: "实际进度:55%",
       left: "center",
       top: "center",
       textStyle: {
@@ -176,7 +167,7 @@ onMounted(() => {
 });
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .my-page {
   display: flex;
   flex-direction: column;
@@ -186,7 +177,7 @@ onMounted(() => {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  min-height: 90vh;
+  min-height: 83vh;
 }
 
 .card {
@@ -236,8 +227,7 @@ onMounted(() => {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
-  background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><path fill="%23333" d="M5 8l5 5 5-5z"/></svg>')
-    no-repeat;
+  background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><path fill="%23333" d="M5 8l5 5 5-5z"/></svg>') no-repeat;
   background-position: right 5px center;
   background-size: 20px 20px;
   border: none;

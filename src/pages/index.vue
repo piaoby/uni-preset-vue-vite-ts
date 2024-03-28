@@ -12,7 +12,7 @@ import { ref } from 'vue'
 const title = ref('Hello')
 </script>
 
-<style>
+<style lang="scss" scoped>
 .content {
   display: flex;
   flex-direction: column;
