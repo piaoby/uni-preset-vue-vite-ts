@@ -1,6 +1,6 @@
 import { useInfoStore } from "@/stores";
 
-const baseURL = "";
+const baseURL = "/api";
 
 // 添加拦截器
 const httpInterceptor = {
@@ -21,7 +21,7 @@ const httpInterceptor = {
     const userStore = useInfoStore();
     const token = userStore.userinfo?.token;
     if (token) {
-      options.header.Authorization = token;
+      options.header.Authorization = "Bearer " + token;
     }
 
     // console.log(options);
@@ -30,15 +30,15 @@ const httpInterceptor = {
 uni.addInterceptor("request", httpInterceptor);
 uni.addInterceptor("uploadFile", httpInterceptor);
 
-interface Data<T> {
+interface Data {
+  data: any;
   code: string;
   msg: string;
-  result: T;
 }
 // 添加类型，支持泛型
 export const http = <T>(options: UniApp.RequestOptions) => {
   // 返回Promise对象
-  return new Promise<Data<T>>((resolve, reject) => {
+  return new Promise<Data>((resolve, reject) => {
     uni.request({
       ...options,
       // 2.请求成功
@@ -46,7 +46,7 @@ export const http = <T>(options: UniApp.RequestOptions) => {
         // console.log(res);
 
         if (res.statusCode >= 200 && res.statusCode < 300) {
-          resolve(res.data as Data<T>);
+          resolve(res.data as Data);
         } else if (res.statusCode === 401) {
           // 401错误 -> 清理用户信息，跳转到登录页
           const userStore = useInfoStore();
@@ -57,7 +57,7 @@ export const http = <T>(options: UniApp.RequestOptions) => {
           // 其他错误
           uni.showToast({
             icon: "none",
-            title: (res.data as Data<T>).msg || "请求错误",
+            title: (res.data as Data).msg || "请求错误",
           });
           reject(res);
         }

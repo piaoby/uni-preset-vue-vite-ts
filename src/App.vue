@@ -1,7 +1,22 @@
 <script setup lang="ts">
 import { onLaunch, onShow, onHide } from "@dcloudio/uni-app";
+import { postUserInfoAPI } from '@/api/login';
+import { useInfoStore } from "@/stores";
+
 onLaunch(() => {
   console.log("App Launch");
+  postUserInfoAPI({
+    "username": "guest",
+    "password": "admin@123",
+    "loginType": "3"
+  }).then((res: any) => {
+    if (res.code == 200) {
+      const userStore = useInfoStore();
+      userStore.setUserInfo({ token: res.data.access_token, userInfo: JSON.parse(res.data.us) })
+      console.log(userStore.userinfo);
+
+    }
+  })
 });
 onShow(() => {
   console.log("App Show");

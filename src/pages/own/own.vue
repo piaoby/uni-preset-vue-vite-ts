@@ -6,13 +6,17 @@
         <div class="user-details">
           <img class="avatar" src="/static/logo.png" />
           <div class="text-info">
-            <div class="username-dropdown" @click="triggerDropdown">
-              <select v-model="selectedUsername" ref="userSelect">
-                <option v-for="name in state.usernames" :key="name" :value="name">
-                  {{ name }}
-                </option>
-              </select>
-            </div>
+            <view class="dropdown">
+              <view class="dropdown-display" @click="triggerDropdown">
+                {{ selectedProname }}
+              </view>
+              <view v-if="isOpen" class="dropdown-options">
+                <view v-for="(option, index) in projectnameItem" :key="index" class="dropdown-option"
+                  @click="selectOption(option)">
+                  {{ option.proName }}
+                </view>
+              </view>
+            </view>
             <p class="email">{{ userEmail }}</p>
           </div>
         </div>
@@ -49,16 +53,14 @@
 </template>
 
 <script setup lang="ts">
-type FunctionItem = {
-  img: string;
-  text: string;
-  value: string;
-};
-import { ref, onMounted, onUnmounted } from "vue";
 import * as echarts from "echarts";
 
+import { ref, onMounted } from "vue";
+import { useInfoStore } from "@/stores";
+import { useBidcodeStore } from '@/stores/modules/bidCodeStore'
+import { getProsByUser, getproProgress } from "@/api/own"
+import type { projectnameItem, FunctionItem, timeInfo } from "@/api/own"
 const state = {
-  usernames: ["XXXXXXX工程", "XXXXXXX工程2", "XXXXXXX工程3"],
   userEmail: "赵小军",
   progress: 50,
   functions: [
@@ -77,93 +79,141 @@ const state = {
     计划工期: "120天",
     计划结束时间: "2022-01-01",
   },
-};
-
-const selectedUsername = ref<string>("");
+}
+const userStore = useInfoStore();
+const selectedBidcode = ref<string>("");
+const selectedProname = ref<string>("");
 const userEmail = ref<string>("");
-const userSelect = ref<HTMLSelectElement | null>(null);
+const userSelect = ref();
+const isOpen = ref(false)
 const progress = ref<number>(0);
 const functions = ref<FunctionItem[]>([]);
+let projectnameItem = ref<projectnameItem[]>()
+const roleCode = ref();
+const fields = ref<timeInfo>({
+  planStartTime: "",
+  planEndTime: "",
+  durationDay: 0,
+  value: 0,
+  value2: 0,
+})
+const bidcodeStore = useBidcodeStore()
 
-const triggerDropdown = (): void => {
-  userSelect.value?.click();
-};
-const goTofunctions = (functionVal: string) => {
-  uni.navigateTo({
-    url: `/pages/functions/${functionVal}`,
-  });
-};
-selectedUsername.value = state.usernames[0];
 userEmail.value = state.userEmail;
 progress.value = state.progress;
 functions.value = state.functions;
+roleCode.value = userStore.userinfo?.userInfo.roleCode;
 
-onMounted(() => {
-  const chartDom = document.getElementById("chart") as HTMLDivElement;
-  const myChart = echarts.init(chartDom);
-  const option = {
-    title: {
-      text: "实际进度:55%",
-      left: "center",
-      top: "center",
-      textStyle: {
-        color: "#30DB9D",
-        fontSize: 10,
+const goTofunctions = (functionVal: string) => {
+  uni.navigateTo({
+    url: `/pages/functions/${functionVal}?bidCode=${selectedBidcode.value}`,
+  });
+};
+//下拉切换选中事件
+const triggerDropdown = (): void => {
+  // userSelect.value?.click();
+
+  isOpen.value = true
+};
+//下拉切换事件
+const selectOption = (val: any) => {
+  selectedProname.value = val.proName
+  selectedBidcode.value = val.bidCode
+  bidcodeStore.setSelectedBidcode(val.bidCode)
+  isOpen.value = false
+  getEchartdata(val.bidCode)
+}
+//获取下拉数据
+const getUserNames = () => {
+  getProsByUser(roleCode.value).then((res) => {
+    projectnameItem = res.data;
+    selectedProname.value = projectnameItem[0].proName;
+    selectedBidcode.value = projectnameItem[0].bidCode;
+    bidcodeStore.setSelectedBidcode(selectedBidcode.value)
+    getEchartdata(selectedBidcode.value)
+  });
+};
+//获取工程进度
+const getEchartdata = (val: string) => {
+  getproProgress(val).then((res) => {
+    fields.value = res.data as timeInfo;
+    state.fields.计划工期 = res.data.durationDay + "天";
+    state.fields.计划开始时间 = res.data.planStartTime;
+    state.fields.计划结束时间 = res.data.planEndTime;
+    const remaining = 100 - (fields.value.value2 + fields.value.value)
+    console.log(remaining, 'ss');
+
+    const chartDom = document.getElementById("chart") as HTMLDivElement;
+    const myChart = echarts.init(chartDom);
+    const option = {
+      title: {
+        text: `实际进度:${fields.value.value}%`,
+        left: "center",
+        top: "center",
+        textStyle: {
+          color: "#30DB9D",
+          fontSize: 10,
+        },
       },
-    },
-    series: [
-      {
-        name: "产品结构",
-        type: "pie",
-        padAngle: 2,
-        startAngle: 90,
-        radius: ["60%", "70%"],
-        avoidLabelOverlap: false,
-        label: {
-          show: false,
-          position: "center",
-        },
-        emphasis: {
+      series: [
+        {
+          name: "产品结构",
+          type: "pie",
+          padAngle: 2,
+          startAngle: 90,
+          radius: ["60%", "70%"],
+          avoidLabelOverlap: false,
           label: {
-            show: true,
-            fontSize: "40",
-            fontWeight: "bold",
+            show: false,
+            position: "center",
           },
-        },
-        labelLine: {
-          show: false,
-        },
-        data: [
-          { name: "实际进度", value: 55 },
-          { name: "计划进度", value: 25 },
-          { name: "剩余进度", value: 20 },
-        ],
-        itemStyle: {
-          normal: {
-            color: function (params: { dataIndex: any }) {
-              var colorList = [
-                ["#20D7FD", "#05FFA5"],
-                ["#FF9905", "#FFD419"],
-                ["#FCFCFC", "#FCFCFC"],
-              ];
-              var index = params.dataIndex;
-              return new echarts.graphic.LinearGradient(0, 0, 1, 1, [
-                {
-                  offset: 0,
-                  color: colorList[index][0],
-                },
-                {
-                  offset: 1,
-                  color: colorList[index][1],
-                },
-              ]);
+          emphasis: {
+            label: {
+              show: true,
+              fontSize: "40",
+              fontWeight: "bold",
+            },
+          },
+          labelLine: {
+            show: false,
+          },
+          data: [
+            { name: "实际进度", value: fields.value.value },
+            { name: "计划进度", value: fields.value.value2 },
+            { name: "剩余进度", value: remaining },
+          ],
+          itemStyle: {
+            normal: {
+              color: function (params: { dataIndex: any }) {
+                var colorList = [
+                  ["#20D7FD", "#05FFA5"],
+                  ["#FF9905", "#FFD419"],
+                  ["#FCFCFC", "#FCFCFC"],
+                ];
+                var index = params.dataIndex;
+                return new echarts.graphic.LinearGradient(0, 0, 1, 1, [
+                  {
+                    offset: 0,
+                    color: colorList[index][0],
+                  },
+                  {
+                    offset: 1,
+                    color: colorList[index][1],
+                  },
+                ]);
+              },
             },
           },
         },
-      },
-    ],
-  };
-  myChart.setOption(option);
+      ],
+    };
+    myChart.setOption(option);
+  });
+};
+onMounted(() => {
+  getUserNames()
+
+
 });
 </script>
 
@@ -213,17 +263,17 @@ onMounted(() => {
   flex-direction: column;
 }
 
-.username-dropdown {
+.dropdown {
   position: relative;
   display: inline-block;
   width: 200px;
 }
 
-.username-dropdown select {
+.dropdown-display {
   padding: 5px 30px 5px 5px;
   font-size: 20px;
   font-weight: 600;
-  width: 100%;
+  width: 200px;
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
@@ -235,13 +285,29 @@ onMounted(() => {
   box-shadow: none;
   background-color: transparent;
   color: #333;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.username-dropdown select:focus {
-  outline: none;
-  font-size: 20px;
-  font-weight: 600;
+
+.dropdown-options {
+  position: absolute;
+  width: 100%;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  padding: 6px 12px;
 }
+
+.dropdown-option {
+  /* Style your options here */
+  padding: 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 
 .email {
   font-size: 14px;
