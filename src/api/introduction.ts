@@ -1,9 +1,7 @@
 import { http } from "@/utils/http";
 
-// 定义一个 TypeScript 接口
 export interface ApiIntroduction {
-  //   value: any;
-  img: string | undefined;
+  img: string;
   proBrief: string;
   org: string;
   proType: string;

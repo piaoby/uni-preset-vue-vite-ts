@@ -5,10 +5,10 @@ export type FunctionItem = {
   text: string;
   value: string;
 };
-export type projectnameItem = {
+export interface projectnameItem {
   proName: string;
   bidCode: string;
-};
+}
 export interface timeInfo {
   durationDay: number;
   planStartTime: string;

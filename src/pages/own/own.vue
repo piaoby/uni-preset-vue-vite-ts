@@ -11,7 +11,7 @@
                 {{ selectedProname }}
               </view>
               <view v-if="isOpen" class="dropdown-options">
-                <view v-for="(option, index) in projectnameItem" :key="index" class="dropdown-option"
+                <view v-for="(option, index) in nameItem" :key="index" class="dropdown-option"
                   @click="selectOption(option)">
                   {{ option.proName }}
                 </view>
@@ -88,7 +88,7 @@ const userSelect = ref();
 const isOpen = ref(false)
 const progress = ref<number>(0);
 const functions = ref<FunctionItem[]>([]);
-let projectnameItem = ref<projectnameItem[]>()
+let nameItem = ref<projectnameItem[]>([])
 const roleCode = ref();
 const fields = ref<timeInfo>({
   planStartTime: "",
@@ -126,11 +126,13 @@ const selectOption = (val: any) => {
 //获取下拉数据
 const getUserNames = () => {
   getProsByUser(roleCode.value).then((res) => {
-    projectnameItem = res.data;
-    selectedProname.value = projectnameItem[0].proName;
-    selectedBidcode.value = projectnameItem[0].bidCode;
-    bidcodeStore.setSelectedBidcode(selectedBidcode.value)
-    getEchartdata(selectedBidcode.value)
+    if (res.data) {
+      nameItem.value = res.data;
+      selectedProname.value = nameItem.value[0].proName;
+      selectedBidcode.value = nameItem.value[0].bidCode;
+      bidcodeStore.setSelectedBidcode(selectedBidcode.value)
+      getEchartdata(selectedBidcode.value)
+    }
   });
 };
 //获取工程进度
