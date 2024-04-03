@@ -75,9 +75,9 @@ const state = {
     { img: "/static/own/car.png", text: "车辆管理", value: "car" },
   ],
   fields: {
-    计划开始时间: "2022-01-01",
-    计划工期: "120天",
-    计划结束时间: "2022-01-01",
+    计划开始时间: "-",
+    计划工期: "-",
+    计划结束时间: "-",
   },
 }
 const userStore = useInfoStore();
@@ -117,11 +117,13 @@ const triggerDropdown = (): void => {
 };
 //下拉切换事件
 const selectOption = (val: any) => {
-  selectedProname.value = val.proName
-  selectedBidcode.value = val.bidCode
-  bidcodeStore.setSelectedBidcode(val.bidCode)
-  isOpen.value = false
-  getEchartdata(val.bidCode)
+  if (val) {
+    selectedProname.value = val.proName
+    selectedBidcode.value = val.bidCode
+    bidcodeStore.setSelectedBidcode(val.bidCode)
+    isOpen.value = false
+    getEchartdata(val.bidCode)
+  }
 }
 //获取下拉数据
 const getUserNames = () => {

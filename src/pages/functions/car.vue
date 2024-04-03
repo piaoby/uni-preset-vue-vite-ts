@@ -33,16 +33,13 @@ const cardata = ref<CarArray>([])
 const getData = async (bidCode: string) => {
   getCarList(bidCode).then((res) => {
     cardata.value = res.data;
-    console.log(cardata.value, 'cardata');
   })
 };
 
 const editCar = (carItem: any) => {
-  // 在此处编写编辑车辆信息的逻辑
   console.log("编辑车辆:", carItem);
 };
 const deleteCar = (carItem: any) => {
-  // 在此处编写删除车辆信息的逻辑，例如弹窗确认、API调用等
   console.log("删除车辆:", carItem);
 };
 onLoad((query) => {

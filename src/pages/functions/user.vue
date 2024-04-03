@@ -33,17 +33,14 @@ const persondata = ref<PersonneArray>([])
 const getData = async (bidCode: string) => {
   getPersonnelList(bidCode).then((res) => {
     persondata.value = res.data;
-    console.log(persondata.value, 'persondata');
   })
 };
 
 const editPerson = (personitem: any) => {
-  // 在此处编写编辑车辆信息的逻辑
-  console.log("编辑车辆:", personitem);
+  console.log("编辑:", personitem);
 };
 const deletePerson = (personitem: any) => {
-  // 在此处编写删除车辆信息的逻辑，例如弹窗确认、API调用等
-  console.log("删除车辆:", personitem);
+  console.log("删除:", personitem);
 };
 onLoad((query) => {
   getData(query?.bidCode);

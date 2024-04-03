@@ -16,7 +16,7 @@ export default {
 
   // 解密
   decrypt(word: string) {
-    const decrypt = CryptoJS.AES.decrypt(word, cbc_key, {
+    const decrypt = CryptoJS.AES.decrypt(decodeURIComponent(word), cbc_key, {
       iv: cbc_iv,
       mode: CryptoJS.mode.ECB,
       padding: CryptoJS.pad.Pkcs7,
