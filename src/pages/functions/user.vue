@@ -12,12 +12,12 @@
           {{ item.status }}
         </div>
       </div>
-      <div class="car-action-buttons">
+      <!-- <div class="car-action-buttons">
         <button class="car-action-button" @click="editPerson(item)">编辑</button>
         <button class="car-action-button delete-button" @click="deletePerson(item)">
           删除
         </button>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>

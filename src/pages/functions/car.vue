@@ -12,12 +12,6 @@
           {{ item.status }}
         </div>
       </div>
-      <div class="car-action-buttons">
-        <button class="car-action-button" @click="editCar(item)">编辑</button>
-        <button class="car-action-button delete-button" @click="deleteCar(item)">
-          删除
-        </button>
-      </div>
     </div>
   </div>
 </template>

@@ -17,7 +17,7 @@
                 </view>
               </view>
             </view>
-            <p class="email">{{ userEmail }}</p>
+            <p class="email">{{ userName }}</p>
           </div>
         </div>
       </div>
@@ -42,9 +42,17 @@
         <h4 class="title">项目进度</h4>
         <div id="chart" style="width: 100%; height: 180px"></div>
         <div class="progressinfo">
-          <div class="field" v-for="(value, key) in state.fields" :key="key">
-            <div class="field-name">{{ key }}</div>
-            <div class="field-value">{{ value }}</div>
+          <div class="field">
+            <div class="field-name">计划开始时间</div>
+            <div class="field-value">{{ fields.planStartTime }}</div>
+          </div>
+          <div class="field">
+            <div class="field-name">计划工期</div>
+            <div class="field-value">{{ fields.durationDay }}</div>
+          </div>
+          <div class="field">
+            <div class="field-name">计划结束时间</div>
+            <div class="field-value">{{ fields.planEndTime }}</div>
           </div>
         </div>
       </div>
@@ -54,15 +62,12 @@
 
 <script setup lang="ts">
 import * as echarts from "echarts";
-
 import { ref, onMounted } from "vue";
 import { useInfoStore } from "@/stores";
 import { useBidcodeStore } from '@/stores/modules/bidCodeStore'
 import { getProsByUser, getproProgress } from "@/api/own"
 import type { projectnameItem, FunctionItem, timeInfo } from "@/api/own"
 const state = {
-  userEmail: "赵小军",
-  progress: 50,
   functions: [
     {
       img: "/static/own/engineering.png",
@@ -74,19 +79,12 @@ const state = {
     { img: "/static/own/user.png", text: "人员管理", value: "user" },
     { img: "/static/own/car.png", text: "车辆管理", value: "car" },
   ],
-  fields: {
-    计划开始时间: "-",
-    计划工期: "-",
-    计划结束时间: "-",
-  },
 }
 const userStore = useInfoStore();
 const selectedBidcode = ref<string>("");
 const selectedProname = ref<string>("");
-const userEmail = ref<string>("");
-const userSelect = ref();
+const userName = ref();
 const isOpen = ref(false)
-const progress = ref<number>(0);
 const functions = ref<FunctionItem[]>([]);
 let nameItem = ref<projectnameItem[]>([])
 const roleCode = ref();
@@ -99,10 +97,11 @@ const fields = ref<timeInfo>({
 })
 const bidcodeStore = useBidcodeStore()
 
-userEmail.value = state.userEmail;
-progress.value = state.progress;
+userName.value = userStore.userinfo?.userInfo.roleName;
 functions.value = state.functions;
 roleCode.value = userStore.userinfo?.userInfo.roleCode;
+console.log(userStore.userinfo, 'userStore.userinfo');
+
 
 const goTofunctions = (functionVal: string) => {
   uni.navigateTo({
@@ -141,12 +140,7 @@ const getUserNames = () => {
 const getEchartdata = (val: string) => {
   getproProgress(val).then((res) => {
     fields.value = res.data as timeInfo;
-    state.fields.计划工期 = res.data.durationDay + "天";
-    state.fields.计划开始时间 = res.data.planStartTime;
-    state.fields.计划结束时间 = res.data.planEndTime;
     const remaining = 100 - (fields.value.value2 + fields.value.value)
-    console.log(remaining, 'ss');
-
     const chartDom = document.getElementById("chart") as HTMLDivElement;
     const myChart = echarts.init(chartDom);
     const option = {

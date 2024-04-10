@@ -8,7 +8,7 @@ export default defineConfig({
     proxy: {
       // 用 '/api' 开头的路径，指向配置的目标地址
       "/api": {
-        target: "http://10.40.92.33:18080/zhgd",
+        target: "http://10.40.92.58:18080/zhgd",
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ""),
       },
