@@ -4,13 +4,13 @@
       <div class="car-item">
         <img :src="item.date" class="car-icon" />
         <div class="car-info">
-          <span class="car-text">{{ item.userName }} </span>
+          <span class="car-text">{{ item.userName }}</span>
           <p>车牌号：{{ item.carNum }}</p>
           <p>电话号码：{{ item.phone }}</p>
         </div>
-        <div :class="{ 'car-status': true, 'status-out': item.status === '离场' }">
-          {{ item.status }}
-        </div>
+        <div
+          :class="{ 'car-status': true, 'status-out': !item.accessType }"
+        >{{ item.accessType?item.accessType:'离场' }}</div>
       </div>
     </div>
   </div>
